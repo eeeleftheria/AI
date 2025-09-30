@@ -35,7 +35,22 @@ def buyLotsOfFruit(orderList):
     Returns cost of order
     """
     totalCost = 0.0
-    "*** YOUR CODE HERE ***"
+    
+    for fruit in orderList:
+        if fruit[0] == 'apples':
+            totalCost += fruitPrices['apples'] * fruit[1]
+        
+        elif fruit[0] == 'oranges':
+            totalCost += fruitPrices['oranges'] * fruit[1]
+        
+        elif fruit[0] == 'pears':
+            totalCost += fruitPrices['pears'] * fruit[1]
+        
+        elif fruit[0] == 'limes':
+            totalCost += fruitPrices['limes'] * fruit[1]
+        
+        elif fruit[0] == 'strawberries':
+            totalCost += fruitPrices['strawberries'] * fruit[1]
 
         
     return totalCost
