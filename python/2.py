@@ -48,3 +48,6 @@ for no, (guest, inv) in enumerate(zip(guests, invites)):
 
 for no, person in persons.items():
     print(f'Guest {no}: {person.is_invited()}')
+
+
+
