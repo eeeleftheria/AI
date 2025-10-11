@@ -48,7 +48,7 @@ class SearchProblem:
         For a given state, this should return a list of triples, (successor,
         action, stepCost), where 'successor' is a successor to the current
         state, 'action' is the action required to get there, and 'stepCost' is
-        the incremental cost of expanding to that successor.
+        the incremental cost (OF SINGLE STEP) of expanding to that successor.
         """
         util.raiseNotDefined()
 
@@ -71,6 +71,8 @@ def tinyMazeSearch(problem):
     s = Directions.SOUTH
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
+
+
 
 def depthFirstSearch(problem: SearchProblem):
     """
@@ -201,11 +203,71 @@ def breadthFirstSearch(problem: SearchProblem):
 
 
 
-
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    
+    startState = problem.getStartState()
+
+    # this time we need the cost it takes to reach the state
+    # so we should store it in the tuple as well
+    priorityQ = util.PriorityQueue()
+    tupleToInsert = (startState, [], 0) # in startState we have taken no actions and have 0 cost
+    priorityQ.push(tupleToInsert, 0)
+
+    explored = [] # list of states that we have visited
+
+    # no solutions left
+    if priorityQ.isEmpty() == True:
+        return -1
+
+    while priorityQ.isEmpty() == False:
+        
+        # check if current state is the goal
+        currItem = priorityQ.pop()
+        currState = currItem[0]
+        currActions = currItem[1]
+        currCost = currItem[2]
+
+        if problem.isGoalState(currState) == True:
+            print("found goal")
+            return currActions
+        
+        # mark state as explored before producing its successors
+        if currState not in explored:
+            explored.append(currState)
+
+        # if it is already explored continue with next state
+        else: continue
+
+        # goal not yet found
+
+        # now we need to check all the successors
+        # nextStates holds all possible next states pacman can take
+        # It is a list of triples (successor, action, stepCost)
+        nextStates = problem.getSuccessors(currState)
+
+        for succState, action, stepCost in nextStates:
+
+            newAction = []
+            newAction = currActions + [action]
+
+            # the cost to get to the successor from start state is: 
+            # cost to get to currState + cost to get from currState->successor
+            newCost = currCost + stepCost  
+
+            tupleToInsert = (succState, newAction, newCost)
+
+            # successors may appear more than once
+            # if so, they are already in the explored list
+            # thus,  so they should not be added in the queue again
+            if succState not in explored:
+                
+                priorityQ.push(tupleToInsert, newCost)
+
+
+
 
 def nullHeuristic(state, problem=None):
     """
