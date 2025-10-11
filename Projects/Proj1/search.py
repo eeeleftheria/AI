@@ -83,17 +83,63 @@ def depthFirstSearch(problem: SearchProblem):
     understand the search problem that is being passed in:
 
     """
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    #print("Start:", problem.getStartState())
+    #print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    #print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
     "*** YOUR CODE HERE ***"
     
     startState = problem.getStartState()
 
+    # we will use a stack and store tuples of (state, actions taken)
+    # for each state and the actions needed to reach it
+    stack = util.Stack()
+    tupleToInsert = (startState, []) # in startState we have taken no actions
+    stack.push(tupleToInsert)
 
+    explored = [] # list of states that we have visited
 
-    util.raiseNotDefined()
+    # no solutions left
+    if stack.isEmpty() == True:
+        return -1
+
+    while stack.isEmpty() == False:
+        
+        # check if current state is the goal
+        currItem = stack.pop()
+        currState = currItem[0]
+        currActions = currItem[1]
+
+        if problem.isGoalState(currState) == True:
+            print("found goal")
+            return currActions
+        
+        # mark state as explored before producing its successors
+        if currState not in explored:
+            explored.append(currState)
+
+        # if it is already explored continue with next state
+        else: continue
+
+        # now we need to check all the successors
+        # nextStates holds all possible next states pacman can take
+        # It is a list of triples (successor, action, stepCost)
+        nextStates = problem.getSuccessors(currState)
+
+        for succState, action, stepCost in nextStates:
+
+            newAction = []
+            newAction = currActions + [action]
+    
+
+            tupleToInsert = (succState, newAction)
+
+            # successors may appear more than once
+            # if so, they are already in the explored list
+            # thus,  so they should not be added in the queue again
+            if succState not in explored:
+                
+                stack.push(tupleToInsert)
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
