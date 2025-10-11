@@ -72,6 +72,7 @@ class GameState:
     ####################################################
 
     # static variable keeps track of which states have had getLegalActions called
+    # shared by all instances of the class, keeps track of states that have been visited
     explored = set()
     def getAndResetExplored():
         tmp = GameState.explored.copy()
@@ -79,6 +80,8 @@ class GameState:
         return tmp
     getAndResetExplored = staticmethod(getAndResetExplored)
 
+    # default is Pacman, other numbers are ghosts
+    # returns legal moves the agent can take from this state
     def getLegalActions( self, agentIndex=0 ):
         """
         Returns the legal actions for the agent specified.
@@ -91,6 +94,7 @@ class GameState:
         else:
             return GhostRules.getLegalActions( self, agentIndex )
 
+    # creates a new game state after an agent moves
     def generateSuccessor( self, agentIndex, action):
         """
         Returns the successor state after the specified agent takes the action.
