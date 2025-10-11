@@ -99,7 +99,7 @@ def depthFirstSearch(problem: SearchProblem):
     tupleToInsert = (startState, []) # in startState we have taken no actions
     stack.push(tupleToInsert)
 
-    explored = [] # list of states that we have visited
+    explored = set() # set of states that we have visited
 
     # no solutions left
     if stack.isEmpty() == True:
@@ -118,7 +118,7 @@ def depthFirstSearch(problem: SearchProblem):
         
         # mark state as explored before producing its successors
         if currState not in explored:
-            explored.append(currState)
+            explored.add(currState)
 
         # if it is already explored continue with next state
         else: continue
@@ -155,7 +155,7 @@ def breadthFirstSearch(problem: SearchProblem):
     tupleToInsert = (startState, []) # in startState we have taken no actions
     queue.push(tupleToInsert)
 
-    explored = [] # list of states that we have visited
+    explored = set() # set of states that we have visited
 
     # no solutions left
     if queue.isEmpty() == True:
@@ -174,7 +174,7 @@ def breadthFirstSearch(problem: SearchProblem):
         
         # mark state as explored before producing its successors
         if currState not in explored:
-            explored.append(currState)
+            explored.add(currState)
 
         # if it is already explored continue with next state
         else: continue
@@ -216,7 +216,7 @@ def uniformCostSearch(problem: SearchProblem):
     tupleToInsert = (startState, [], 0) # in startState we have taken no actions and have 0 cost
     priorityQ.push(tupleToInsert, 0)
 
-    explored = [] # list of states that we have visited
+    explored = set() # set of states that we have visited
 
     # no solutions left
     if priorityQ.isEmpty() == True:
@@ -236,7 +236,7 @@ def uniformCostSearch(problem: SearchProblem):
         
         # mark state as explored before producing its successors
         if currState not in explored:
-            explored.append(currState)
+            explored.add(currState)
 
         # if it is already explored continue with next state
         else: continue
