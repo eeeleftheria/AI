@@ -85,12 +85,6 @@ def depthFirstSearch(problem: SearchProblem):
     understand the search problem that is being passed in:
 
     """
-    #print("Start:", problem.getStartState())
-    #print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    #print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-
-    "*** YOUR CODE HERE ***"
-    
     startState = problem.getStartState()
 
     # we will use a stack and store tuples of (state, actions taken)
@@ -139,7 +133,7 @@ def depthFirstSearch(problem: SearchProblem):
             # successors may appear more than once
             # if so, they are already in the explored list
             # thus,  so they should not be added in the queue again
-            if succState not in explored:
+            if succState not in (explored or stack):
                 
                 stack.push(tupleToInsert)
 
@@ -197,8 +191,11 @@ def breadthFirstSearch(problem: SearchProblem):
             # successors may appear more than once
             # if so, they are already in the explored list
             # thus,  so they should not be added in the queue again
-            if succState not in explored:
+            if succState not in (explored or queue): 
                 
+                # here we could check if the successive state
+                # is a goal so we terminate now and not need
+                # to expand all of the nodes till the goal
                 queue.push(tupleToInsert)
 
 
@@ -223,13 +220,13 @@ def uniformCostSearch(problem: SearchProblem):
         return -1
 
     while priorityQ.isEmpty() == False:
-        
-        # check if current state is the goal
+                
         currItem = priorityQ.pop()
         currState = currItem[0]
         currActions = currItem[1]
         currCost = currItem[2]
-
+        
+        # check if current state is the goal
         if problem.isGoalState(currState) == True:
             print("found goal")
             return currActions
@@ -261,10 +258,15 @@ def uniformCostSearch(problem: SearchProblem):
 
             # successors may appear more than once
             # if so, they are already in the explored list
-            # thus,  so they should not be added in the queue again
+            # so they should not be added in the queue again
             if succState not in explored:
-                
-                priorityQ.push(tupleToInsert, newCost)
+
+                # we use update instead of push, since 
+                # we should also update the cost in case
+                # the state is already in the queue with a higher cost
+                priorityQ.update(tupleToInsert, newCost)
+
+
 
 
 
