@@ -139,7 +139,6 @@ def depthFirstSearch(problem: SearchProblem):
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
 
     startState = problem.getStartState()
 
@@ -275,10 +274,82 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+# calculates the priority for the A* algorithm
+def priorityFunction(item: tuple):
+    currCost = item[2] # cost from start state to item state
+    heuristicValue = item[3] # estimated cost from item state to goal state
+    return currCost + heuristicValue
+
+
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    startState = problem.getStartState()
+
+    pQueueWithFunc = util.PriorityQueueWithFunction(priorityFunction)
+
+    heuristicValue = heuristic(startState, problem)
+
+    # we add the heuristic value in the tuple
+    # since it is needed for the calculation of the priority
+    tupleToInsert = (startState, [], 0, heuristicValue) 
+    pQueueWithFunc.push(tupleToInsert)
+
+    explored = set() # set of states that we have visited
+
+    # no solutions left
+    if pQueueWithFunc.isEmpty() == True:
+        return -1
+
+    while pQueueWithFunc.isEmpty() == False:
+                
+        currItem = pQueueWithFunc.pop()
+        currState = currItem[0]
+        currActions = currItem[1]
+        currCost = currItem[2]
+        currHeuristic = currItem[3]
+        
+        # check if current state is the goal
+        if problem.isGoalState(currState) == True:
+            print("found goal")
+            return currActions
+        
+        # mark state as explored before producing its successors
+        if currState not in explored:
+            explored.add(currState)
+
+        # if it is already explored continue with next state
+        else: continue
+
+        # goal not yet found
+
+        # now we need to check all the successors
+        # nextStates holds all possible next states pacman can take
+        # It is a list of tuples (successor, action, stepCost, heuristic value)
+        nextStates = problem.getSuccessors(currState)
+
+        for succState, action, stepCost in nextStates:
+
+            newAction = []
+            newAction = currActions + [action]
+
+            # the cost to get to the successor from start state is: 
+            # cost to get to currState + cost to get from currState->successor
+            newCost = currCost + stepCost
+
+            # calculation of heuristic value for successor state
+            newHeuristic = heuristic(succState, problem)  
+
+            tupleToInsert = (succState, newAction, newCost, newHeuristic)
+
+
+            if succState not in explored:
+                pQueueWithFunc.push(tupleToInsert)
+
+
+
+
+
 
 
 # Abbreviations
