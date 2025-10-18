@@ -152,7 +152,7 @@ def breadthFirstSearch(problem: SearchProblem):
 
     # no solutions left
     if queue.isEmpty() == True:
-        return -1
+        return []
 
     while queue.isEmpty() == False:
         

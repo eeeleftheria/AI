@@ -295,15 +295,35 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # should return a data structure of our choosing that represents a state
+
+        # the start state can only consist of the startingPosition
+        # and whether any corner has been visited already or not
+
+        if self.startingPosition in self.corners:
+            visited = (self.startingPosition,) # must be a tuple
+            # and not a set, because set is mutable thus not hashabe
+        
+        else:
+            visited = () # no corners yet visited
+
+        startState = (self.startingPosition, visited)
+        
+        return startState
+        
 
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        visited = state[1]
+
+        if len(visited) == 4: # all four corner have been visited
+            return True
+        
+        return False             
+        
 
     def getSuccessors(self, state: Any):
         """
@@ -326,6 +346,27 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            x,y = state[0] # position of current state
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x+dx), int(y+dy)
+            hitsWall = self.walls[nextx][nexty]
+
+            # if it is a legal move, add it to the list
+            if hitsWall == False:
+                succPosition = (nextx, nexty) # position of successor state   
+                succVisited = set(state[1]) # we copy it as a set so we can add a new corner 
+
+                # if the successor is one of the cornes, add it to the set of visited corners
+                if succPosition in self.corners:
+                    succVisited.add(succPosition)
+
+                # store it as a tuple again so it cannot be modified
+                succState = (succPosition, tuple(succVisited))
+
+
+                # appends the triple of (state, action, cost)
+                # to the list of successors
+                successors.append((succState, action, 1))                        
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
