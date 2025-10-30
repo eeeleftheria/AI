@@ -302,7 +302,7 @@ class CornersProblem(search.SearchProblem):
 
         if self.startingPosition in self.corners:
             visited = (self.startingPosition,) # must be a tuple
-            # and not a set, because set is mutable thus not hashabe
+            # and not a set, because set is mutable thus not hashable
         
         else:
             visited = () # no corners yet visited
@@ -317,7 +317,7 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
 
-        visited = state[1]
+        visited = state[1] # store visited corners from the state 
 
         if len(visited) == 4: # all four corner have been visited
             return True
@@ -403,7 +403,10 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
 
     "*** YOUR CODE HERE ***"
 
-    visitedCorners = tuple(state[1])
+    # admissible: 0 ≤ heuristic_cost(s) ≤ true_cost(s)
+    # consistent: heuristic_cost(s) ≤ cost(s, a, s') + heuristic_cost(s')
+
+    visitedCorners = tuple(state[1]) # visited corner of the state
     unvisited = [] 
 
     # create the list of unvisited corners
@@ -425,7 +428,7 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
         cornerX = corner[0] # X coordinate of unvisited corner
         cornerY = corner[1] # Y -//-
 
-        # calculation of distance (same as Manhattan)
+        # calculation of Manhattan distance from current position to corner
         dist = abs(cornerX - currX) + abs(cornerY - currY)
         
         # add distance to the list
@@ -528,9 +531,27 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
+
+    # grid[x][y] where (x,y) are positions on a Pacman map with x horizontal,
+    # y vertical and the origin (0,0) in the bottom left corner
+    position, foodGrid = state # position: tuple (x,y) , foodGrid: list of lists 
     "*** YOUR CODE HERE ***"
-    return 0
+
+    foodList = foodGrid.asList() # list of positions where food is present
+    if len(foodList) == 0: # all food has been eaten, return 0 for goal state
+        return 0
+
+    # we need to calculate the distance from pacman's position to the food pellet that is the farthest away
+    allDists = [] # list of distances from pacman's position to each food pellet
+    for foodPos in foodList:
+        # calculate manhattan distance 
+        currDist = abs(foodPos[0] - position[0]) + abs(foodPos[1] - position[1])
+        allDists.append(currDist) # append distance to the list
+
+    # find the maximum distance
+    maxDist = max(allDists)
+
+    return maxDist
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -561,7 +582,8 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.aStarSearch(problem)
+        
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -597,7 +619,10 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # since the problem is to find a path to any food
+        # we check if the current position has food
+        if self.food[x][y] == True:
+            return True
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: pacman.GameState) -> int:
     """
