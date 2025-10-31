@@ -548,7 +548,7 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
         currDist = abs(foodPos[0] - position[0]) + abs(foodPos[1] - position[1])
         allDists.append(currDist) # append distance to the list
 
-    # find the maximum distance
+    # find the maximum distance since pacman will need at least that distance to cover
     maxDist = max(allDists)
 
     return maxDist
