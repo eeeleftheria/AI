@@ -411,7 +411,7 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
 
     # create the list of unvisited corners
     for corner in corners:
-        if corner not in visitedCorners:
+        if corner not in visitedCorners:    
             unvisited.append(corner)
 
     # if all 4 corners have been visited, return 0 for goal state

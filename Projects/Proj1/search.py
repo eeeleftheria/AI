@@ -107,7 +107,6 @@ def depthFirstSearch(problem: SearchProblem):
 
         # check if current state is the goal
         if problem.isGoalState(currState) == True:
-            print("found goal")
             return currActions
         
         # mark state as explored before producing its successors
@@ -162,7 +161,6 @@ def breadthFirstSearch(problem: SearchProblem):
         currActions = currItem[1]
 
         if problem.isGoalState(currState) == True:
-            print("found goal")
             return currActions
         
         # mark state as explored before producing its successors
@@ -224,7 +222,6 @@ def uniformCostSearch(problem: SearchProblem):
         
         # check if current state is the goal
         if problem.isGoalState(currState) == True:
-            print("found goal")
             return currActions
         
         # mark state as explored before producing its successors
@@ -311,7 +308,6 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
         
         # check if current state is the goal
         if problem.isGoalState(currState) == True:
-            print("found goal")
             return currActions
         
         # mark state as explored before producing its successors
