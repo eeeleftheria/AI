@@ -104,27 +104,6 @@ class ReflexAgent(Agent):
             else: # if dist == 0, already on food: biggest reward
                 foodReciprocal = 4  
 
-        powerPelletReciprocal = 0
-        powerPelletList = currentGameState.getCapsules()
-        if powerPelletList:
-            # calculate distances to all power pellets remaining
-            pelletDists = [manhattanDistance(newPos, pelletPos) for pelletPos in powerPelletList]
-
-            minPelletDist = min(pelletDists)
-
-            if (minPelletDist > 0) and (minPelletDist <= 1): # if pellet is very close: big reward
-                powerPelletReciprocal = 3 / minPelletDist  # higher weight to prioritize eating
-
-            elif (minPelletDist > 1) and (minPelletDist <= 3): # medium distance from pellet: medium reward
-                powerPelletReciprocal = 2 / minPelletDist
-
-            elif (minPelletDist > 3): # far from pellet: small reward
-                powerPelletReciprocal = 1 / minPelletDist
-
-            else: # if dist == 0, already on pellet: biggest reward
-                powerPelletReciprocal = 3 
-
-
         ghostReciprocal = 0
         ghostsPositions = [ghostState.getPosition() for ghostState in newGhostStates]
         if ghostsPositions:
@@ -150,8 +129,7 @@ class ReflexAgent(Agent):
         if action == Directions.STOP:
             stoppingPenalty = -0.5  # penalty for stopping
 
-        finalScore = (2*foodReciprocal + ghostReciprocal + successorGameState.getScore() + stoppingPenalty +
-        1.5 * powerPelletReciprocal)
+        finalScore = (2*foodReciprocal + ghostReciprocal + successorGameState.getScore() + stoppingPenalty)
 
         return finalScore
 
