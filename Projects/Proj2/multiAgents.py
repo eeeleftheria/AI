@@ -150,13 +150,6 @@ class ReflexAgent(Agent):
         if action == Directions.STOP:
             stoppingPenalty = -0.5  # penalty for stopping
 
-        # scared time: if ghosts are scared, pacman can chase them -> bigger reward
-        if newScaredTimes:
-            minScaredTime = min(newScaredTimes)
-            if minScaredTime > 0:
-                ghostReciprocal *= -3   # chasing scared ghosts is good(positive) and should be prioritized
-
-
         finalScore = (2*foodReciprocal + ghostReciprocal + successorGameState.getScore() + stoppingPenalty +
         1.5 * powerPelletReciprocal)
 
@@ -261,7 +254,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         for action in legalActions:
         
             successorState = gameState.generateSuccessor(0, action)
-            newV = self.minValue(successorState, depth, 1)
+            newV = self.minValue(successorState, depth, 1) # after pacman, ghost 1 plays always so MIN
             if newV > v:
                 v = newV
                 bestAction = action # store best action found so far
@@ -306,6 +299,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
+        
         alphaBeta = self.alphaBetaDecision(gameState, 0, 0, float('-inf'), float('inf'))
         return alphaBeta[1]
 
@@ -399,7 +393,74 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        expectimax = self.expectimaxDecision(gameState, 0, 0)
+        return expectimax[1]
+
+    # first player in our case is always Pacman (MAX player)
+    def expectimaxDecision(self, gameState: GameState, depth: int, agentIndex: int):
+
+        if agentIndex == 0:
+            return self.maxValue(gameState, depth, 0)
+
+    # checks for terminal state or max depth reached
+    def terminalTest(self, gameState: GameState, depth: int):
+
+        if gameState.isWin() or gameState.isLose() or depth == self.depth:
+            return True
+
+    # returns the utility of the state
+    def getUtility(self, gameState: GameState):
+
+        return self.evaluationFunction(gameState)
+
+    # MAX player: Pacman, agentIndex = 0 always
+    def maxValue(self, gameState: GameState, depth: int, agentIndex: int):
+
+        if self.terminalTest(gameState, depth):
+            return (self.getUtility(gameState), None)
+
+        v = float('-inf')
+        bestAction = None
+        
+        legalActions = gameState.getLegalActions(0)
+
+        # for each successor state, pacman can go to
+        # calculate its minValue recursively (ghosts' turn)
+        # and choose the maximum among them
+        for action in legalActions:
+        
+            successorState = gameState.generateSuccessor(0, action)
+            newV = self.chanceValue(successorState, depth, 1)
+            if newV > v:
+                v = newV
+                bestAction = action # store best action found so far
+ 
+        return (v, bestAction)  
+
+
+    def chanceValue(self, gameState: GameState, depth: int, agentIndex: int):
+
+        if self.terminalTest(gameState, depth):
+            return self.getUtility(gameState)
+
+        v = 0
+
+        legalActions = gameState.getLegalActions(agentIndex)
+        
+        probability = 1 / len(legalActions)  # uniform probability for each action
+
+        for action in legalActions:
+            successorState = gameState.generateSuccessor(agentIndex, action)
+
+            # if last ghost, next is pacman's turn and depth increases
+            if agentIndex == gameState.getNumAgents() - 1:
+                v += probability * self.maxValue(successorState, depth + 1, 0)[0]
+            
+            # else, next is the next ghost's turn (again MIN player)
+            else:
+                v += probability * self.chanceValue(successorState, depth, agentIndex + 1)
+
+        return v
 
 def betterEvaluationFunction(currentGameState: GameState):
     """
@@ -409,7 +470,80 @@ def betterEvaluationFunction(currentGameState: GameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    foodList = currentGameState.getFood().asList()
+    pacmanPos = currentGameState.getPacmanPosition()
+    ghostStates = currentGameState.getGhostStates()
+    capsulesList = currentGameState.getCapsules()
+    scaredTimes = [ghostState.scaredTimer for ghostState in ghostStates]
+
+    foodReciprocal = 0
+    minFoodDist = float('inf')
+    if foodList:
+        foodDists = [manhattanDistance(pacmanPos, foodPos) for foodPos in foodList]
+        
+        minFoodDist = min(foodDists)
+        if minFoodDist == 0:
+            foodReciprocal = 4
+        
+        elif (minFoodDist > 0) and (minFoodDist <= 1):
+            foodReciprocal = 3 / minFoodDist
+       
+        elif (minFoodDist > 1) and (minFoodDist <= 3):
+            foodReciprocal = 2 / minFoodDist
+       
+        elif (minFoodDist > 3):
+            foodReciprocal = 1 / minFoodDist
+
+    powerPelletReciprocal = 0
+    minPelletDist = float('inf')
+    if capsulesList:
+        pelletDists = [manhattanDistance(pacmanPos, pelletPos) for pelletPos in capsulesList]
+        
+        minPelletDist = min(pelletDists)
+        if minPelletDist == 0:
+            powerPelletReciprocal = 3
+        
+        elif (minPelletDist > 0) and (minPelletDist <= 1):
+            powerPelletReciprocal = 3 / minPelletDist
+       
+        elif (minPelletDist > 1) and (minPelletDist <= 3):
+            powerPelletReciprocal = 2 / minPelletDist
+        
+        elif (minPelletDist > 3):
+           powerPelletReciprocal = 1 / minPelletDist
+
+    ghostReciprocal = 0
+    ghostPositions = [ghostState.getPosition() for ghostState in ghostStates]
+    if ghostPositions:
+        ghostDists = [manhattanDistance(pacmanPos, ghostPos) for ghostPos in ghostPositions]
+        
+        minGhostDist = min(ghostDists)
+
+        if (minGhostDist > 0) and (minGhostDist <= 1):
+            ghostReciprocal = -2 / minGhostDist
+
+        elif (minGhostDist > 1) and (minGhostDist <= 2):
+            ghostReciprocal = -1 / minGhostDist
+
+        elif (minGhostDist > 2):
+            ghostReciprocal = 0
+
+        else:
+            ghostReciprocal = -5
+
+    scaredBonus = 0
+    if scaredTimes:
+        minScaredTime = min(scaredTimes)
+        if minScaredTime > 0:
+            ghostReciprocal *= -3
+
+
+    finalScore = (2*foodReciprocal + ghostReciprocal + currentGameState.getScore() +
+    1.5 * powerPelletReciprocal + scaredBonus)
+
+
+    return finalScore
 
 # Abbreviation
 better = betterEvaluationFunction
