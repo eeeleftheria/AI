@@ -62,6 +62,11 @@ class CSP(search.Problem):
         self.curr_domains = None
         self.nassigns = 0
 
+        # dictionary to store weights for each constraint
+        # used for dom/wdeg heuristic
+        self.constraintWeights = dict()
+
+
     def assign(self, var, val, assignment):
         """Add {var: val} to assignment; Discard the old value if any."""
         assignment[var] = val
@@ -342,6 +347,48 @@ def AC4(csp, queue=None, removals=None, arc_heuristic=dom_j_up):
 
 # Variable ordering
 
+# returns the sum of the weights of the constraints 
+# that involve a variable X and any unassigned variable
+def weightedDegree(var, assignment, csp):
+    weight = 1
+    for neighbor in csp.neighbors[var]:
+        if neighbor not in assignment:
+
+            if (var,neighbor) in csp.constraintWeights:
+                weight += csp.constraintWeights[(neighbor, var)]
+
+            else:
+                weight += csp.constraintWeights[(var, neighbor)]
+                
+
+    return weight
+
+
+# an assignment is dict of {var:val}
+def domWdeg(assignment, csp):
+
+    minRatio = float('inf')
+    
+    unassignedVars = list()
+
+    # find all unassigned variables
+    for var in csp.variables:
+        if var not in assignment:
+            unassignedVars.append(var)
+
+    # calculate weighted degree of variable
+    for var in unassignedVars:
+        domainSize = len(csp.domains[var])
+        degreeVal = weightedDegree(var, assignment, csp)
+
+        ratio = domainSize / degreeVal
+
+        if ratio < minRatio:
+            minRatio = ratio
+            minVar = var
+
+    return minVar
+
 
 def first_unassigned_variable(assignment, csp):
     """The default variable order."""
@@ -384,13 +431,37 @@ def no_inference(csp, var, value, assignment, removals):
 def forward_checking(csp, var, value, assignment, removals):
     """Prune neighbor values inconsistent with var=value."""
     csp.support_pruning()
+
+    # check all neighbors of var 
     for B in csp.neighbors[var]:
+
+        # check neighbors that have not been assigned a value
         if B not in assignment:
+
+            # check all possible values for B from its domain
             for b in csp.curr_domains[B][:]:
+
+                # if any value does not satisfy the constraints
+                # remove it
                 if not csp.constraints(var, value, B, b):
                     csp.prune(B, b, removals)
+
+            # after examining all values from B's domain
+            # if domain is now empty(dead end)
             if not csp.curr_domains[B]:
+                
+                if (var, B) in csp.constraintWeights:
+                    ctr = (var,B)
+
+                else:
+                    ctr = (B, var)
+
+                # increase weight of constraint (var,B)
+                # since it creates a problem
+                csp.constraintWeights[ctr] += 1
                 return False
+            
+        
     return True
 
 
