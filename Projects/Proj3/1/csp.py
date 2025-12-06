@@ -233,6 +233,20 @@ def AC3b(csp, queue=None, removals=None, arc_heuristic=dom_j_up):
         for x in set(csp.curr_domains[Xi]) - Si_p:
             csp.prune(Xi, x, removals)
             revised = True
+
+        if not csp.curr_domains[Xi]:
+            
+            if (Xi, Xj) in csp.constraintWeights:
+                ctr = (Xi, Xj)
+
+            else:
+                ctr = (Xj, Xi)
+
+            # increase weight of constraint (var,B)
+            # since it creates a problem
+            csp.constraintWeights[ctr] += 1
+
+
         if revised:
             for Xk in csp.neighbors[Xi]:
                 if Xk != Xj:
@@ -258,6 +272,19 @@ def AC3b(csp, queue=None, removals=None, arc_heuristic=dom_j_up):
             for x in set(csp.curr_domains[Xj]) - Sj_p:
                 csp.prune(Xj, x, removals)
                 revised = True
+          
+            if not csp.curr_domains[Xj]:
+            
+                if (Xi, Xj) in csp.constraintWeights:
+                    ctr = (Xi, Xj)
+
+                else:
+                    ctr = (Xj, Xi)
+
+                # increase weight of constraint (var,B)
+                # since it creates a problem
+                csp.constraintWeights[ctr] += 1
+        
             if revised:
                 for Xk in csp.neighbors[Xj]:
                     if Xk != Xi:

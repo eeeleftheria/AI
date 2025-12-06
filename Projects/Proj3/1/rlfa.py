@@ -1,5 +1,6 @@
 import csp
 import sys
+import time
 
 class RLFA(csp.CSP):
 
@@ -124,17 +125,28 @@ if __name__ == "__main__":
 
     rlfa = RLFA(varFile, domFile, ctrFile) 
     
-    if algorithm == 'fc':
+    start = 0
+    end = 0
 
-        res = csp.backtracking_search(rlfa, csp.domWdeg, csp.unordered_domain_values, csp.forward_checking)
+    if algorithm == 'fc':
+        print('Forward Checking algorithm')
+        start = time.time()
+        res = csp.backtracking_search(rlfa, csp.domWdeg, csp.lcv, csp.forward_checking)
+        end = time.time()
 
     elif algorithm == 'mac':
-        res = csp.backtracking_search(rlfa, csp.domWdeg, csp.unordered_domain_values, csp.mac)
+        start = time.time()
+        res = csp.backtracking_search(rlfa, csp.domWdeg, csp.lcv, csp.mac)
+        end = time.time()
 
     else:
         print('Invalid algorithm')
-        print('Available algorithms: MAC, FC')
+        print('Available algorithms: mac, fc')
         sys.exit(1)
+
+    totalTime = end - start
+    print('Total time: ', totalTime)
+
 
     
 
