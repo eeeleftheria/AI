@@ -1,0 +1,54 @@
+Starting experiments...
+======================================
+
+======================================
+Instance: rlfap/var2-f24.txt
+======================================
+
+Running fc-cbj on rlfap/var2-f24.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  1.2654049396514893
+Solution found successfully
+Total constraints checked:  402730
+Number of assignments:  6996
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var2-f25.txt
+======================================
+
+Running fc-cbj on rlfap/var2-f25.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  0.6754825115203857
+No solution found
+Total constraints checked:  628030
+Number of assignments:  3148
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var3-f10.txt
+======================================
+
+Running fc-cbj on rlfap/var3-f10.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  4.235793590545654
+No solution found
+Total constraints checked:  3568919
+Number of assignments:  11959
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var3-f11.txt
+======================================
+
+Running fc-cbj on rlfap/var3-f11.txt...
+-----------------------------------

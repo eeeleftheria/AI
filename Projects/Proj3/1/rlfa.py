@@ -1,6 +1,9 @@
 import csp
 import sys
 import time
+import signal
+
+timeOut = False
 
 class RLFA(csp.CSP):
 
@@ -69,7 +72,7 @@ class RLFA(csp.CSP):
 
                 self.constraintsDict[(var1, var2)].append((op, k))
                 self.constraintsDict[(var2, var1)].append((op,k))
-
+       
         # constructor of CSP
         csp.CSP.__init__(self, self.variables, self.domains, self.neighbors, self.constraintsFunc)
 
@@ -83,8 +86,13 @@ class RLFA(csp.CSP):
 
 
 
+
         
     def constraintsFunc(self, A, a, B, b):
+
+        global timeOut
+        if timeOut:
+            return False
 
         # A, B are not involved in a constraint together
         if (A,B) not in self.constraintsDict:
@@ -110,6 +118,10 @@ class RLFA(csp.CSP):
     
         return True
     
+def timeoutHanlder(signum, frame):
+    global timeOut
+    timeOut = True
+    
             
 
 if __name__ == "__main__":
@@ -127,6 +139,9 @@ if __name__ == "__main__":
     
     start = 0
     end = 0
+    timeoutTime = 500
+    signal.signal(signal.SIGALRM, timeoutHanlder)
+    signal.alarm(timeoutTime)
 
     if algorithm == 'fc':
         print('===Forward Checking algorithm===')
@@ -157,8 +172,22 @@ if __name__ == "__main__":
         print('Available algorithms: mac, fc, minCon, fc-cbj')
         sys.exit(1)
 
-    totalTime = end - start
-    print('Total time: ', totalTime)
+    signal.alarm(0)
+
+    if timeOut == True:
+        print('Algorithm exceeded ', timeoutTime, 'seconds')
+
+    else:
+        totalTime = end - start
+        print('Total time: ', totalTime)
+
+    if  res:
+        print('Solution found successfully')
+    else:
+        print('No solution found')
+        
+    print('Total constraints checked: ', rlfa.ctrChecks)
+    print('Number of assignments: ', rlfa.nassigns)
 
 
     

@@ -1,0 +1,505 @@
+Starting experiments...
+======================================
+
+======================================
+Instance: rlfap/var2-f24.txt
+======================================
+
+Running fc on rlfap/var2-f24.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Total time:  0.2608964443206787
+Solution found successfully
+Total constraints checked:  165851
+Number of assignments:  3068
+
+-----------------------------------
+
+Running mac on rlfap/var2-f24.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  0.27882981300354004
+Solution found successfully
+Total constraints checked:  422649
+Number of assignments:  911
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var2-f24.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  1.5070362091064453
+Solution found successfully
+Total constraints checked:  0
+Number of assignments:  6996
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var2-f25.txt
+======================================
+
+Running fc on rlfap/var2-f25.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Total time:  19.31819438934326
+No solution found
+Total constraints checked:  20772119
+Number of assignments:  123457
+
+-----------------------------------
+
+Running mac on rlfap/var2-f25.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  13.997701644897461
+No solution found
+Total constraints checked:  23854104
+Number of assignments:  11093
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var2-f25.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  0.7445039749145508
+No solution found
+Total constraints checked:  0
+Number of assignments:  3148
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var3-f10.txt
+======================================
+
+Running fc on rlfap/var3-f10.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  206204360
+Number of assignments:  1931330
+
+-----------------------------------
+
+Running mac on rlfap/var3-f10.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  5.577669143676758
+Solution found successfully
+Total constraints checked:  9352441
+Number of assignments:  4833
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var3-f10.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  4.5878400802612305
+No solution found
+Total constraints checked:  0
+Number of assignments:  11959
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var3-f11.txt
+======================================
+
+Running fc on rlfap/var3-f11.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  348379233
+Number of assignments:  3263830
+
+-----------------------------------
+
+Running mac on rlfap/var3-f11.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  23.039350748062134
+No solution found
+Total constraints checked:  43697968
+Number of assignments:  13819
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var3-f11.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  35.27732276916504
+No solution found
+Total constraints checked:  0
+Number of assignments:  72677
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var6-w2.txt
+======================================
+
+Running fc on rlfap/var6-w2.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Total time:  0.16598844528198242
+No solution found
+Total constraints checked:  222196
+Number of assignments:  1750
+
+-----------------------------------
+
+Running mac on rlfap/var6-w2.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  0.036319732666015625
+No solution found
+Total constraints checked:  92539
+Number of assignments:  42
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var6-w2.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  0.056951284408569336
+No solution found
+Total constraints checked:  0
+Number of assignments:  299
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var7-w1-f4.txt
+======================================
+
+Running fc on rlfap/var7-w1-f4.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  104212959
+Number of assignments:  2582069
+
+-----------------------------------
+
+Running mac on rlfap/var7-w1-f4.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  0.1428380012512207
+Solution found successfully
+Total constraints checked:  334731
+Number of assignments:  486
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var7-w1-f4.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  289.40530729293823
+No solution found
+Total constraints checked:  0
+Number of assignments:  1313902
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var7-w1-f5.txt
+======================================
+
+Running fc on rlfap/var7-w1-f5.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  190842219
+Number of assignments:  3425001
+
+-----------------------------------
+
+Running mac on rlfap/var7-w1-f5.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  2.039724349975586
+No solution found
+Total constraints checked:  5982046
+Number of assignments:  1606
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var7-w1-f5.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Total time:  6.083069086074829
+No solution found
+Total constraints checked:  0
+Number of assignments:  33497
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var8-f10.txt
+======================================
+
+Running fc on rlfap/var8-f10.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  182275659
+Number of assignments:  1139895
+
+-----------------------------------
+
+Running mac on rlfap/var8-f10.txt...
+-----------------------------------
+=====MAC algorithm=====
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  415938616
+Number of assignments:  250270
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var8-f10.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  0
+Number of assignments:  430244
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var8-f11.txt
+======================================
+
+Running fc on rlfap/var8-f11.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  139987149
+Number of assignments:  728025
+
+-----------------------------------
+
+Running mac on rlfap/var8-f11.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  15.986314296722412
+No solution found
+Total constraints checked:  32128256
+Number of assignments:  9501
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var8-f11.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  0
+Number of assignments:  346669
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var11.txt
+======================================
+
+Running fc on rlfap/var11.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Total time:  131.6262948513031
+Solution found successfully
+Total constraints checked:  42294021
+Number of assignments:  359178
+
+-----------------------------------
+
+Running mac on rlfap/var11.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  43.53846859931946
+Solution found successfully
+Total constraints checked:  58697316
+Number of assignments:  35942
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var11.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Traceback (most recent call last):
+  File "/home/eleftheria/AI/Projects/Proj3/1/rlfa.py", line 161, in <module>
+    res = csp.backjumping_search(rlfa, csp.domWdeg, csp.lcv, csp.forwardChecking_Cbj)
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 698, in backjumping_search
+    result = backjump({})
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 649, in backjump
+    result = backjump(assignment)
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 649, in backjump
+    result = backjump(assignment)
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 649, in backjump
+    result = backjump(assignment)
+  [Previous line repeated 988 more times]
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 636, in backjump
+    for value in order_domain_values(var, assignment, csp):
+                 ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 468, in lcv
+    return sorted(csp.choices(var), key=lambda val: csp.nconflicts(var, val, assignment))
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 468, in <lambda>
+    return sorted(csp.choices(var), key=lambda val: csp.nconflicts(var, val, assignment))
+                                                    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 94, in nconflicts
+    return count(conflict(v) for v in self.neighbors[var])
+  File "/home/eleftheria/AI/Projects/Proj3/1/utils.py", line 45, in count
+    return sum(map(bool, seq))
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 94, in <genexpr>
+    return count(conflict(v) for v in self.neighbors[var])
+                 ~~~~~~~~^^^
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 92, in conflict
+    return var2 in assignment and not self.constraints(var, val, var2, assignment[var2])
+                                      ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RecursionError: maximum recursion depth exceeded
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var14-f27.txt
+======================================
+
+Running fc on rlfap/var14-f27.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  59349898
+Number of assignments:  826889
+
+-----------------------------------
+
+Running mac on rlfap/var14-f27.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  100.59960699081421
+Solution found successfully
+Total constraints checked:  43066050
+Number of assignments:  95759
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var14-f27.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Traceback (most recent call last):
+  File "/home/eleftheria/AI/Projects/Proj3/1/rlfa.py", line 161, in <module>
+    res = csp.backjumping_search(rlfa, csp.domWdeg, csp.lcv, csp.forwardChecking_Cbj)
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 698, in backjumping_search
+    result = backjump({})
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 649, in backjump
+    result = backjump(assignment)
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 649, in backjump
+    result = backjump(assignment)
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 649, in backjump
+    result = backjump(assignment)
+  [Previous line repeated 988 more times]
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 636, in backjump
+    for value in order_domain_values(var, assignment, csp):
+                 ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 468, in lcv
+    return sorted(csp.choices(var), key=lambda val: csp.nconflicts(var, val, assignment))
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 468, in <lambda>
+    return sorted(csp.choices(var), key=lambda val: csp.nconflicts(var, val, assignment))
+                                                    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 94, in nconflicts
+    return count(conflict(v) for v in self.neighbors[var])
+  File "/home/eleftheria/AI/Projects/Proj3/1/utils.py", line 45, in count
+    return sum(map(bool, seq))
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 94, in <genexpr>
+    return count(conflict(v) for v in self.neighbors[var])
+                 ~~~~~~~~^^^
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 92, in conflict
+    return var2 in assignment and not self.constraints(var, val, var2, assignment[var2])
+                                      ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RecursionError: maximum recursion depth exceeded
+
+-----------------------------------
+
+
+======================================
+Instance: rlfap/var14-f28.txt
+======================================
+
+Running fc on rlfap/var14-f28.txt...
+-----------------------------------
+===Forward Checking algorithm===
+Algorithm exceeded  300 seconds
+No solution found
+Total constraints checked:  57147156
+Number of assignments:  866732
+
+-----------------------------------
+
+Running mac on rlfap/var14-f28.txt...
+-----------------------------------
+=====MAC algorithm=====
+Total time:  38.47380208969116
+No solution found
+Total constraints checked:  44017032
+Number of assignments:  46779
+
+-----------------------------------
+
+Running fc-cbj on rlfap/var14-f28.txt...
+-----------------------------------
+====FC-CBJ algorithm====
+Traceback (most recent call last):
+  File "/home/eleftheria/AI/Projects/Proj3/1/rlfa.py", line 161, in <module>
+    res = csp.backjumping_search(rlfa, csp.domWdeg, csp.lcv, csp.forwardChecking_Cbj)
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 698, in backjumping_search
+    result = backjump({})
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 649, in backjump
+    result = backjump(assignment)
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 649, in backjump
+    result = backjump(assignment)
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 649, in backjump
+    result = backjump(assignment)
+  [Previous line repeated 988 more times]
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 636, in backjump
+    for value in order_domain_values(var, assignment, csp):
+                 ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 468, in lcv
+    return sorted(csp.choices(var), key=lambda val: csp.nconflicts(var, val, assignment))
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 468, in <lambda>
+    return sorted(csp.choices(var), key=lambda val: csp.nconflicts(var, val, assignment))
+                                                    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 94, in nconflicts
+    return count(conflict(v) for v in self.neighbors[var])
+  File "/home/eleftheria/AI/Projects/Proj3/1/utils.py", line 45, in count
+    return sum(map(bool, seq))
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 94, in <genexpr>
+    return count(conflict(v) for v in self.neighbors[var])
+                 ~~~~~~~~^^^
+  File "/home/eleftheria/AI/Projects/Proj3/1/csp.py", line 92, in conflict
+    return var2 in assignment and not self.constraints(var, val, var2, assignment[var2])
+                                      ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RecursionError: maximum recursion depth exceeded
+
+-----------------------------------
+
+
+All experiments completed!
