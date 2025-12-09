@@ -527,7 +527,8 @@ def forwardChecking_Cbj(csp, var, value, assignment, removals):
                     csp.prune(B, b, removals)
 
                     # var caused this removal
-                    csp.conflictLists[B].append(var)
+                    if var not in csp.conflictLists[B]:
+                        csp.conflictLists[B].append(var)
 
             # after examining all values from B's domain
             # if domain is now empty(dead end)
@@ -564,7 +565,7 @@ def forwardChecking_Cbj(csp, var, value, assignment, removals):
 def mac(csp, var, value, assignment, removals, constraint_propagation=AC3):
     """Maintain arc consistency."""
     res = constraint_propagation(csp, {(X, var) for X in csp.neighbors[var]}, removals)
-    return res[0]
+    return res[0] # return only true or false
 
 # The search, proper
 
@@ -668,16 +669,14 @@ def backjumping_search(csp, select_unassigned_variable=first_unassigned_variable
 
                         # update orderOfAssignments to contain all values till varToJump (not including it)
                         # This is KEY: we want to return to varToJump's for-loop to try its NEXT value
-                        orderOfAssignments[:] = orderOfAssignments[:idx]
+                        orderOfAssignments[:] = orderOfAssignments[:idx + 1]
                         
-                        # Restore removals and unassign current var before jumping
+                        # Restore removals for var and unassign current var before jumping
                         csp.restore(removals)
                         csp.unassign(var, assignment)
                         
                         # Return None to exit current variable's for-loop and jump back
                         return None
-                
-                csp.restore(removals)
 
         # When all values of var fail, unassign it and remove from order
         csp.unassign(var, assignment)
