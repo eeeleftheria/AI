@@ -129,19 +129,32 @@ if __name__ == "__main__":
     end = 0
 
     if algorithm == 'fc':
-        print('Forward Checking algorithm')
+        print('===Forward Checking algorithm===')
         start = time.time()
         res = csp.backtracking_search(rlfa, csp.domWdeg, csp.lcv, csp.forward_checking)
         end = time.time()
 
     elif algorithm == 'mac':
+        print('=====MAC algorithm=====')
         start = time.time()
         res = csp.backtracking_search(rlfa, csp.domWdeg, csp.lcv, csp.mac)
+        end = time.time()
+    
+    elif algorithm == 'fc-cbj':
+        print('====FC-CBJ algorithm====')
+        start = time.time()
+        res = csp.backjumping_search(rlfa, csp.domWdeg, csp.lcv, csp.forwardChecking_Cbj)
+        end = time.time()
+
+    elif algorithm == 'minCon':
+        print('===Min conflicts algorithm===')
+        start = time.time()
+        res = csp.min_conflicts(rlfa)
         end = time.time()
 
     else:
         print('Invalid algorithm')
-        print('Available algorithms: mac, fc')
+        print('Available algorithms: mac, fc, minCon, fc-cbj')
         sys.exit(1)
 
     totalTime = end - start

@@ -66,6 +66,9 @@ class CSP(search.Problem):
         # used for dom/wdeg heuristic
         self.constraintWeights = dict()
 
+        # used for FC-CBJ
+        self.conflictLists = {var: list() for var in self.variables}
+
 
     def assign(self, var, val, assignment):
         """Add {var: val} to assignment; Discard the old value if any."""
@@ -209,6 +212,18 @@ def revise(csp, Xi, Xj, removals, checks=0):
         if conflict:
             csp.prune(Xi, x, removals)
             revised = True
+
+        # check if domain of Xi is now empty
+        if not csp.curr_domains[Xi]:
+
+            if (Xi, Xj) not in csp.constraintWeights:
+                ctr = (Xj, Xi)
+        
+            else:
+                ctr = (Xi, Xj)
+
+            csp.constraintWeights[ctr] += 1
+        
     return revised, checks
 
 
@@ -465,7 +480,7 @@ def forward_checking(csp, var, value, assignment, removals):
         # check neighbors that have not been assigned a value
         if B not in assignment:
 
-            # check all possible values for B from its domain
+            # check all possible values for neighbor from its domain
             for b in csp.curr_domains[B][:]:
 
                 # if any value does not satisfy the constraints
@@ -491,11 +506,65 @@ def forward_checking(csp, var, value, assignment, removals):
         
     return True
 
+def forwardChecking_Cbj(csp, var, value, assignment, removals):
+    """Prune neighbor values inconsistent with var=value 
+        and when neighbor domain becomes empty go to 
+        most recent variable in conflict set and merge domains"""
+    
+    csp.support_pruning()
 
-def mac(csp, var, value, assignment, removals, constraint_propagation=AC3b):
+    # check all neighbors of var 
+    for B in csp.neighbors[var]:
+
+        # check neighbors that have not been assigned a value
+        if B not in assignment:
+
+            # check all possible values for neighbor from its domain
+            for b in csp.curr_domains[B][:]:
+
+                # if any value does not satisfy the constraints: remove it
+                if not csp.constraints(var, value, B, b):
+                    csp.prune(B, b, removals)
+
+                    # var caused this removal
+                    csp.conflictLists[B].append(var)
+
+            # after examining all values from B's domain
+            # if domain is now empty(dead end)
+            if not csp.curr_domains[B]:
+                
+                if (var, B) in csp.constraintWeights:
+                    ctr = (var,B)
+
+                else:
+                    ctr = (B, var)
+
+                # increase weight of constraint (var,B)
+                # since it creates a problem
+                csp.constraintWeights[ctr] += 1
+
+                # this is where CBJ comes into play
+
+                # add all values of conflict list of B
+                # to conflict list of val
+                for varToInsert in csp.conflictLists[B]:
+                    if varToInsert not in csp.conflictLists[var]:
+
+                        # exclude the variable itself
+                        if not (varToInsert == var):
+                            csp.conflictLists[var].append(varToInsert)
+                return False
+            
+        
+    return True
+    
+
+
+
+def mac(csp, var, value, assignment, removals, constraint_propagation=AC3):
     """Maintain arc consistency."""
-    return constraint_propagation(csp, {(X, var) for X in csp.neighbors[var]}, removals)
-
+    res = constraint_propagation(csp, {(X, var) for X in csp.neighbors[var]}, removals)
+    return res[0]
 
 # The search, proper
 
@@ -505,18 +574,35 @@ def backtracking_search(csp, select_unassigned_variable=first_unassigned_variabl
     """[Figure 6.5]"""
 
     def backtrack(assignment):
+        # if all variables have been assigned a value, solution found
         if len(assignment) == len(csp.variables):
             return assignment
+
+        # select next variable: dom/wdeg based
         var = select_unassigned_variable(assignment, csp)
+        
+        # loop through its domain
         for value in order_domain_values(var, assignment, csp):
+
+            # var should have 0 conflicts with already assigned variables
             if 0 == csp.nconflicts(var, value, assignment):
+                
+                # assign value to var
                 csp.assign(var, value, assignment)
                 removals = csp.suppose(var, value)
+
+                # FC, MAC, etc
                 if inference(csp, var, value, assignment, removals):
                     result = backtrack(assignment)
                     if result is not None:
                         return result
+                
+                # restore pruning if recursion
+                # did not find a solution
                 csp.restore(removals)
+        
+        # remove the value of the variable 
+        # with no solution
         csp.unassign(var, assignment)
         return None
 
@@ -524,6 +610,86 @@ def backtracking_search(csp, select_unassigned_variable=first_unassigned_variabl
     assert result is None or csp.goal_test(result)
     return result
 
+
+def backjumping_search(csp, select_unassigned_variable=first_unassigned_variable,
+                        order_domain_values=unordered_domain_values, inference=no_inference):
+    
+    # used to store the order of the variables that are being assigned
+    orderOfAssignments = list()
+
+    def backjump(assignment):
+        # solution found
+        if len(assignment) == len(csp.variables):
+            return assignment
+
+        # select variable to assign (dom/wdeg)
+        var = select_unassigned_variable(assignment, csp)
+
+        # examine each value of domain
+        for value in order_domain_values(var, assignment, csp):
+            
+            # value should have 0 conflicts with already assigned variables
+            if 0 == csp.nconflicts(var, value, assignment):
+                csp.conflictLists[var].clear()
+                csp.assign(var, value, assignment)
+
+                # add variable to list of assignments to keep order
+                orderOfAssignments.append(var)
+
+                removals = csp.suppose(var, value)
+      
+                if inference(csp, var, value, assignment, removals):
+                    result = backjump(assignment)
+      
+                    if result is not None:
+                        return result
+
+                # dead end: CBJ
+                # get last variable of conflict list (added most recently)
+                
+                # Check if conflict list is not empty
+                if csp.conflictLists[var]:
+                    # get last variable of conflict set (added most recently)
+                    varToJump = csp.conflictLists[var][-1]
+                    
+                    # Check if varToJump is in orderOfAssignments
+                    if varToJump in orderOfAssignments:
+                        idx = orderOfAssignments.index(varToJump)
+
+                        # Merge conflict lists: add var's conflicts to varToJump's conflicts
+                        for conflict_var in csp.conflictLists[var]:
+                            if conflict_var not in csp.conflictLists[varToJump] and conflict_var != varToJump:
+                                csp.conflictLists[varToJump].append(conflict_var)
+
+                        # unassign all values AFTER varToJump (not including it)
+                        for valToUnassign in orderOfAssignments[idx+1:]:
+                            csp.unassign(valToUnassign, assignment)
+                            csp.conflictLists[valToUnassign].clear()
+
+                        # update orderOfAssignments to contain all values till varToJump (not including it)
+                        # This is KEY: we want to return to varToJump's for-loop to try its NEXT value
+                        orderOfAssignments[:] = orderOfAssignments[:idx]
+                        
+                        # Restore removals and unassign current var before jumping
+                        csp.restore(removals)
+                        csp.unassign(var, assignment)
+                        
+                        # Return None to exit current variable's for-loop and jump back
+                        return None
+                
+                csp.restore(removals)
+
+        # When all values of var fail, unassign it and remove from order
+        csp.unassign(var, assignment)
+        if var in orderOfAssignments:
+            orderOfAssignments.remove(var)
+
+        
+        return None
+
+    result = backjump({})
+    assert result is None or csp.goal_test(result)
+    return result
 
 # ______________________________________________________________________________
 # Min-conflicts Hill Climbing search for CSPs
