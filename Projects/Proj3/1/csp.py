@@ -64,9 +64,13 @@ class CSP(search.Problem):
 
         self.ctrChecks = 0 # number of contraint checks
 
-        # dictionary to store weights for each constraint
-        # used for dom/wdeg heuristic
+        # DOM/WDEG HEURISTIC: initialization of weights
         self.constraintWeights = dict()
+
+        for var1 in self.variables:
+            for var2 in self.variables:
+                if var1 != var2:
+                    self.constraintWeights[(var1, var2)] = 1
 
         # used for FC-CBJ
         self.conflictLists = {var: list() for var in self.variables}
@@ -221,13 +225,9 @@ def revise(csp, Xi, Xj, removals, checks=0):
         # check if domain of Xi is now empty
         if not csp.curr_domains[Xi]:
 
-            if (Xi, Xj) not in csp.constraintWeights:
-                ctr = (Xj, Xi)
-        
-            else:
-                ctr = (Xi, Xj)
+            csp.constraintWeights[(Xi, Xj)] += 1
+            csp.constraintWeights[(Xj, Xi)] += 1
 
-            csp.constraintWeights[ctr] += 1
         
     return revised, checks
 
@@ -256,16 +256,10 @@ def AC3b(csp, queue=None, removals=None, arc_heuristic=dom_j_up):
 
         if not csp.curr_domains[Xi]:
             
-            if (Xi, Xj) in csp.constraintWeights:
-                ctr = (Xi, Xj)
-
-            else:
-                ctr = (Xj, Xi)
-
             # increase weight of constraint (var,B)
             # since it creates a problem
-            csp.constraintWeights[ctr] += 1
-
+            csp.constraintWeights[(Xi, Xj)] += 1
+            csp.constraintWeights[(Xj, Xi)] += 1
 
         if revised:
             for Xk in csp.neighbors[Xi]:
@@ -294,16 +288,11 @@ def AC3b(csp, queue=None, removals=None, arc_heuristic=dom_j_up):
                 revised = True
           
             if not csp.curr_domains[Xj]:
-            
-                if (Xi, Xj) in csp.constraintWeights:
-                    ctr = (Xi, Xj)
-
-                else:
-                    ctr = (Xj, Xi)
 
                 # increase weight of constraint (var,B)
                 # since it creates a problem
-                csp.constraintWeights[ctr] += 1
+                csp.constraintWeights[(Xi, Xj)] += 1
+                csp.constraintWeights[(Xj, Xi)] += 1
         
             if revised:
                 for Xk in csp.neighbors[Xj]:
@@ -397,16 +386,11 @@ def AC4(csp, queue=None, removals=None, arc_heuristic=dom_j_up):
 # returns the sum of the weights of the constraints 
 # that involve a variable X and any unassigned variable
 def weightedDegree(var, assignment, csp):
-    weight = 1
+    weight = 0
     for neighbor in csp.neighbors[var]:
         if neighbor not in assignment:
-
-            if (var,neighbor) in csp.constraintWeights:
-                weight += csp.constraintWeights[(neighbor, var)]
-
-            else:
-                weight += csp.constraintWeights[(var, neighbor)]
-                
+         
+            weight += csp.constraintWeights[(var, neighbor)]               
 
     return weight
 
@@ -415,6 +399,7 @@ def weightedDegree(var, assignment, csp):
 def domWdeg(assignment, csp):
 
     minRatio = float('inf')
+    minVar = -1
     
     unassignedVars = list()
 
@@ -425,9 +410,19 @@ def domWdeg(assignment, csp):
 
     # calculate weighted degree of variable
     for var in unassignedVars:
-        domainSize = len(csp.domains[var])
+        
+        if csp.curr_domains and len(csp.curr_domains[var]) != 0:
+            domainSize = len(csp.curr_domains[var])
+
+        else:
+            # curr_domains not initialized yet, use original domains
+            domainSize = len(csp.domains[var])
+            
         degreeVal = weightedDegree(var, assignment, csp)
 
+        if degreeVal == 0:
+            degreeVal = 1
+        
         ratio = domainSize / degreeVal
 
         if ratio < minRatio:
@@ -492,31 +487,16 @@ def forward_checking(csp, var, value, assignment, removals):
                 # remove value from domain if it does not satisfy the ctr
                 if not csp.constraints(var, value, B, b):
                     csp.prune(B, b, removals)
-                    csp.conflictLists[B].append(var) # var caused this removal
 
             # after examining all values from B's domain
             # if domain is now empty(dead end)
             if not csp.curr_domains[B]:
-                
-                if (var, B) in csp.constraintWeights:
-                    ctr = (var,B)
-
-                else:
-                    ctr = (B, var)
 
                 # increase weight of constraint (var,B)
                 # since it creates a problem
-                csp.constraintWeights[ctr] += 1
+                csp.constraintWeights[(var, B)] += 1
+                csp.constraintWeights[(B, var)] += 1
 
-                        # add all values of conflict list of B
-                # to conflict list of val
-                for varToInsert in csp.conflictLists[B]:
-                    if varToInsert not in csp.conflictLists[var]:
-
-                        # exclude the variable itself
-                        if not (varToInsert == var):
-                            csp.conflictLists[var].append(varToInsert)
-              
                 return False
             
         
@@ -531,13 +511,10 @@ def forwardChecking_Cbj(csp, var, value, assignment, removals):
 
     # check all neighbors of var 
     for B in csp.neighbors[var]:
-
         # check neighbors that have not been assigned a value
         if B not in assignment:
-
             # check all possible values for neighbor from its domain
             for b in csp.curr_domains[B][:]:
-
                 csp.ctrChecks += 1
 
                 # if any value does not satisfy the constraints: remove it
@@ -551,16 +528,9 @@ def forwardChecking_Cbj(csp, var, value, assignment, removals):
             # after examining all values from B's domain
             # if domain is now empty(dead end)
             if not csp.curr_domains[B]:
-                
-                if (var, B) in csp.constraintWeights:
-                    ctr = (var,B)
-
-                else:
-                    ctr = (B, var)
-
-                # increase weight of constraint (var,B)
-                # since it creates a problem
-                csp.constraintWeights[ctr] += 1
+    
+                csp.constraintWeights[(var, B)] += 1
+                csp.constraintWeights[(B, var)] += 1
 
                 # this is where CBJ comes into play
 
@@ -572,9 +542,11 @@ def forwardChecking_Cbj(csp, var, value, assignment, removals):
                         # exclude the variable itself
                         if not (varToInsert == var):
                             csp.conflictLists[var].append(varToInsert)
+
+                csp.conflictLists[var].append(B)
                 return False
             
-        
+    # no value of var caused a wipeout 
     return True
     
 
@@ -643,20 +615,21 @@ def backjumping_search(csp, select_unassigned_variable=first_unassigned_variable
 
         # select variable to assign (dom/wdeg)
         var = select_unassigned_variable(assignment, csp)
+        csp.conflictLists[var].clear()
 
         # examine each value of domain
         for value in order_domain_values(var, assignment, csp):
             
             # value should have 0 conflicts with already assigned variables
             if 0 == csp.nconflicts(var, value, assignment):
-                csp.conflictLists[var].clear()
                 csp.assign(var, value, assignment)
 
                 # add variable to list of assignments to keep order
                 orderOfAssignments.append(var)
 
                 removals = csp.suppose(var, value)
-      
+
+                # if no wipe out was caused, continue with recursion
                 if inference(csp, var, value, assignment, removals):
                     result = backjump(assignment)
       
@@ -685,23 +658,22 @@ def backjumping_search(csp, select_unassigned_variable=first_unassigned_variable
                             csp.unassign(valToUnassign, assignment)
                             csp.conflictLists[valToUnassign].clear()
 
-                        # update orderOfAssignments to contain all values till varToJump (not including it)
-                        # This is KEY: we want to return to varToJump's for-loop to try its NEXT value
-                        orderOfAssignments[:] = orderOfAssignments[:idx + 1]
+                        # update orderOfAssignments to contain all values till varToJump + varTojump
+                        # we want to return to varToJump's for-loop to try its NEXT value
+                        orderOfAssignments[:] = orderOfAssignments[:idx+1]
                         
                         # Restore removals for var and unassign current var before jumping
                         csp.restore(removals)
-                        csp.unassign(var, assignment)
                         
                         # Return None to exit current variable's for-loop and jump back
-                        return None
+                        break;
 
                 # no wipeout, just inconsistency: check next val of var
                 csp.restore(removals)
 
         # All values examined: dead-end 
+        csp.unassign(var,assignment)
         if var in orderOfAssignments:
-            csp.unassign(var,assignment)
             orderOfAssignments.remove(var)
 
         

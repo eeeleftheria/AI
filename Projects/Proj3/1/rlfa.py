@@ -72,20 +72,9 @@ class RLFA(csp.CSP):
 
                 self.constraintsDict[(var1, var2)].append((op, k))
                 self.constraintsDict[(var2, var1)].append((op,k))
-       
+        
         # constructor of CSP
         csp.CSP.__init__(self, self.variables, self.domains, self.neighbors, self.constraintsFunc)
-
-        # DOM/WDEG HEURISTIC: initialization of weights
-        self.constraintWeights = dict()
-
-        for (var1, var2) in self.constraintsDict:
-                
-            self.constraintWeights[(var1, var2)] = 1
-
-
-
-
 
         
     def constraintsFunc(self, A, a, B, b):
@@ -121,7 +110,6 @@ class RLFA(csp.CSP):
 def timeoutHanlder(signum, frame):
     global timeOut
     timeOut = True
-    
             
 
 if __name__ == "__main__":
@@ -188,6 +176,9 @@ if __name__ == "__main__":
         
     print('Total constraints checked: ', rlfa.ctrChecks)
     print('Number of assignments: ', rlfa.nassigns)
+    print('-----------------------------')
+
+    print(res)
 
 
     

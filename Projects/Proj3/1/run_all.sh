@@ -1,11 +1,9 @@
 #!/bin/bash
-# filepath: /home/eleftheria/AI/Projects/Proj3/1/run_all.sh
 
-# Output file
 OUTPUT_FILE="results.txt"
 
 # Clear the output file
-> $OUTPUT_FILE
+truncate -s 0 $OUTPUT_FILE
 
 # Array of instance files (adjust paths as needed)
 INSTANCES=(
@@ -21,16 +19,12 @@ INSTANCES=(
     "rlfap/var11.txt rlfap/dom11.txt rlfap/ctr11.txt"
     "rlfap/var14-f27.txt rlfap/dom14-f27.txt rlfap/ctr14-f27.txt"
     "rlfap/var14-f28.txt rlfap/dom14-f28.txt rlfap/ctr14-f28.txt"
-
-
-    # Add your other 8 instances here
 )
 
 # Array of algorithms
 ALGORITHMS=("fc-cbj")
 
-echo "Starting experiments..." | tee -a $OUTPUT_FILE
-echo "======================================" | tee -a $OUTPUT_FILE
+# write to both terminal and file
 echo "" | tee -a $OUTPUT_FILE
 
 # Loop through each instance
@@ -60,4 +54,3 @@ for instance in "${INSTANCES[@]}"; do
 done
 
 echo "All experiments completed!" | tee -a $OUTPUT_FILE
-echo "Results saved to $OUTPUT_FILE"
