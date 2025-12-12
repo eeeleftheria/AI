@@ -32,6 +32,7 @@ if __name__ == "__main__":
         numOfCombs = int(parts[1])
 
         # create numOfCombs variables Xi: one for each combination 
+        # numbers from 1, ..., numOfCombs
         for i in range(1, numOfCombs+1):
             problem.addVariable(i, [0,1])
 
