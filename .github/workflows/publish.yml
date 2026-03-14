@@ -1,5 +1,4 @@
 # Build and publish the docker image to GHCR
-
 name: Publish Docker Image
 on:
   push:
@@ -30,7 +29,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./Projects/Proj1
+          file: ./Projects/Proj1/Dockerfile
           push: true
           tags: ghcr.io/eeeleftheria/pacman-project1:latest
